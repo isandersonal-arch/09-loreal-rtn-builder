@@ -2,9 +2,8 @@
 const categoryFilter = document.getElementById("categoryFilter");
 const productsContainer = document.getElementById("productsContainer");
 const chatForm = document.getElementById("chatForm");
-const userInput = document.getElementById("userInput");
 const chatWindow = document.getElementById("chatWindow");
-const apiKey = OPENAI_API_KEY; // Make sure to name your secret OPENAI_API
+
 
 /* Show initial placeholder until user selects a category */
 productsContainer.innerHTML = `
