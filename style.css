@@ -230,10 +230,17 @@ body {
   display: flex;
   gap: 15px;
   min-height: 160px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
-  border: 1px solid #e3a535;
+  border-color: #e3a535;
+}
+
+.product-card.selected {
+  border-color: #e3a535;
+  box-shadow: 0 0 0 2px rgba(227, 165, 53, 0.2);
 }
 
 .product-card img {
@@ -278,6 +285,19 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.selected-product-pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #fff4df;
+  color: #8a5a00;
+  font-size: 14px;
+}
+
+.empty-state {
+  color: #666;
+  font-size: 14px;
 }
 
 .generate-btn {
