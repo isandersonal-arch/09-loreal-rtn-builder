@@ -101,7 +101,7 @@ body {
   border: 1px solid #ff003b;
   overflow-y: auto;
   background: #fafafa;
-  margin-bottom: 20px
+  margin-bottom: 20px;
   white-space: pre-line;
   display: flex;
   flex-direction: column;
