@@ -224,12 +224,16 @@ body {
 
 .product-card {
   flex: 0 1 calc(33.333% - 14px);
-  border: 1px solid #ccc;
+  border: 1px solid #ff003b;
   padding: 15px;
   border-radius: 4px;
   display: flex;
   gap: 15px;
   min-height: 160px;
+}
+
+.product-card:hover {
+  border: 1px solid #e3a535;
 }
 
 .product-card img {
