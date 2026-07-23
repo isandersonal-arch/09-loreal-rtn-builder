@@ -97,7 +97,13 @@ function renderSelectedProducts() {
   selectedProductsList.innerHTML = selectedProducts
     .map(
       (product) => `
-      <div class="selected-product-pill">${product.name}</div>
+      <button
+        type="button"
+        class="selected-product-pill"
+        data-product-id="${product.id}"
+      >
+        ${product.name}
+      </button>
     `,
     )
     .join("");
@@ -167,6 +173,16 @@ productsContainer.addEventListener("click", (event) => {
   }
 
   toggleSelectedProduct(Number(card.dataset.productId));
+});
+
+selectedProductsList.addEventListener("click", (event) => {
+  const pill = event.target.closest(".selected-product-pill");
+
+  if (!pill) {
+    return;
+  }
+
+  toggleSelectedProduct(Number(pill.dataset.productId));
 });
 
 productsContainer.addEventListener("keydown", (event) => {

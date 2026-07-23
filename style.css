@@ -324,10 +324,25 @@ body {
 
 .selected-product-pill {
   padding: 8px 12px;
+  border: none;
   border-radius: 999px;
   background: #fff4df;
   color: #8a5a00;
   font-size: 14px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.selected-product-pill:hover {
+  background: #ffe3b3;
+  transform: translateY(-1px);
+}
+
+.selected-product-pill:focus {
+  outline: 2px solid #ff003b;
+  outline-offset: 2px;
 }
 
 .empty-state {
