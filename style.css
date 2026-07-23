@@ -226,6 +226,7 @@ body {
   position: relative;
   flex: 0 1 calc(33.333% - 14px);
   border: 1px solid #ff003b;
+  background-color: #fafafa;
   padding: 15px;
   border-radius: 4px;
   display: flex;

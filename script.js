@@ -152,7 +152,12 @@ async function fetchAIResponse(userMessage) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        messages: [{ role: "user", content: userMessage }],
+        messages: [
+           {role: "system",
+          content:
+            "You are a helpful assistant that helps customers navigate L'Oréal's products and provides tailored recommendations. If a user's query is unrelated to L'Oréal products, politely inform them that you can only assist with L'Oréal-related inquiries.",
+        },
+          { role: "user", content: userMessage }],
       }),
     },
   );
