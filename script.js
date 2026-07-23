@@ -158,6 +158,9 @@ async function fetchAIResponse(userMessage) {
             "You are a helpful assistant that helps customers navigate L'Oréal's products and provides tailored recommendations. If a user's query is unrelated to L'Oréal products, politely inform them that you can only assist with L'Oréal-related inquiries.",
         },
           { role: "user", content: userMessage }],
+          temperature: 0.7,
+          max_completion_tokens: 500,
+
       }),
     },
   );
@@ -173,7 +176,7 @@ async function handleUserInput(userMessage) {
     const aiResponse = await fetchAIResponse(userMessage);
     addMessage(aiResponse, "ai");
   } catch (error) {
-    addMessage("Sorry, I could not get a response right now.", "ai");
+    addMessage("Sorry, there was an error generating your routine. Please try again.");
     console.error(error);
   }
 }
