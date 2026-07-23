@@ -182,7 +182,7 @@ async function fetchAIResponse(userMessage) {
           {
             role: "system",
             content:
-              "You are a helpful assistant that helps customers navigate L'Oréal's products and provides tailored recommendations. If a user's query is unrelated to L'Oréal products, politely inform them that you can only assist with L'Oréal-related inquiries.",
+              "You are a helpful assistant that helps customers navigate L'Oréal's products and provides tailored recommendations. If a user's query is unrelated to the brand portfolio of L'Oréal Group brands, politely inform them that you can only assist with L'Oréal-related inquiries.",
           },
           { role: "user", content: routinePrompt },
         ],
