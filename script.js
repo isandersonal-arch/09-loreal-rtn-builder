@@ -8,9 +8,11 @@ const selectedProductsList = document.getElementById("selectedProductsList");
 const generateRoutineButton = document.getElementById("generateRoutine");
 
 const STORAGE_KEY = "lorealRoutinePreferences";
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
 
 let allProducts = [];
 let selectedProducts = [];
+let inactivityTimer;
 
 /* Show initial placeholder until user selects a category */
 productsContainer.innerHTML = `
@@ -81,11 +83,25 @@ function renderProductsForCurrentCategory() {
   displayProducts(filteredProducts);
 }
 
+function resetCategorySelection() {
+  categoryFilter.selectedIndex = 0;
+  renderProductsForCurrentCategory();
+  savePreferences();
+}
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    resetCategorySelection();
+  }, INACTIVITY_TIMEOUT_MS);
+}
+
 async function initializeApp() {
   await loadProducts();
   restorePreferences();
   renderSelectedProducts();
   renderProductsForCurrentCategory();
+  resetInactivityTimer();
 }
 
 function renderSelectedProducts() {
@@ -208,7 +224,14 @@ categoryFilter.addEventListener("change", async () => {
 
   renderProductsForCurrentCategory();
   savePreferences();
+  resetInactivityTimer();
 });
+
+["click", "keydown", "mousemove", "touchstart", "scroll"].forEach(
+  (eventName) => {
+    document.addEventListener(eventName, resetInactivityTimer);
+  },
+);
 
 function getFormValues() {
   const categoryValue = categoryFilter.value;
