@@ -5,6 +5,7 @@ const chatForm = document.getElementById("chatForm");
 const chatWindow = document.getElementById("chatWindow");
 const userInput = document.getElementById("userInput");
 const selectedProductsList = document.getElementById("selectedProductsList");
+const generateRoutineButton = document.getElementById("generateRoutine");
 
 let allProducts = [];
 let selectedProducts = [];
@@ -135,6 +136,29 @@ categoryFilter.addEventListener("change", async (e) => {
   displayProducts(filteredProducts);
 });
 
+function getFormValues() {
+  const categoryValue = categoryFilter.value;
+  const chatMessageValue = userInput.value.trim();
+  const selectedProductsText =
+    selectedProducts.length > 0
+      ? selectedProducts
+          .map((product) => `${product.name} (${product.brand})`)
+          .join(", ")
+      : "No products selected yet.";
+
+  return {
+    categoryValue,
+    chatMessageValue,
+    selectedProductsText,
+  };
+}
+
+function buildRoutinePrompt(userMessage) {
+  const { categoryValue, selectedProductsText } = getFormValues();
+
+  return `Plan a personalized, step-by-step routine based on the selected products. Category: ${categoryValue || "No category selected"}. Selected products: ${selectedProductsText}. ${userMessage ? `The customer says: ${userMessage}` : "Please create a helpful beginner-friendly routine."}`;
+}
+
 function addMessage(text, sender) {
   const label = sender === "user" ? "You" : "AI";
   const messageClass = sender === "user" ? "user" : "ai";
@@ -144,6 +168,8 @@ function addMessage(text, sender) {
 }
 
 async function fetchAIResponse(userMessage) {
+  const routinePrompt = buildRoutinePrompt(userMessage);
+
   const response = await fetch(
     "https://loreal-chatbot-worker.ih184.workers.dev/",
     {
@@ -153,14 +179,15 @@ async function fetchAIResponse(userMessage) {
       },
       body: JSON.stringify({
         messages: [
-           {role: "system",
-          content:
-            "You are a helpful assistant that helps customers navigate L'Oréal's products and provides tailored recommendations. If a user's query is unrelated to L'Oréal products, politely inform them that you can only assist with L'Oréal-related inquiries.",
-        },
-          { role: "user", content: userMessage }],
-          temperature: 0.7,
-          max_completion_tokens: 500,
-
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that helps customers navigate L'Oréal's products and provides tailored recommendations. If a user's query is unrelated to L'Oréal products, politely inform them that you can only assist with L'Oréal-related inquiries.",
+          },
+          { role: "user", content: routinePrompt },
+        ],
+        temperature: 0.7,
+        max_completion_tokens: 500,
       }),
     },
   );
@@ -176,13 +203,30 @@ async function handleUserInput(userMessage) {
     const aiResponse = await fetchAIResponse(userMessage);
     addMessage(aiResponse, "ai");
   } catch (error) {
-    addMessage("Sorry, there was an error generating your routine. Please try again.");
+    addMessage(
+      "Sorry, there was an error generating your routine. Please try again.",
+    );
     console.error(error);
   }
 }
 
 chatWindow.innerHTML =
   '<div class="msg ai">👋 Hello! How can I help you today?</div>';
+
+generateRoutineButton.addEventListener("click", async () => {
+  const { chatMessageValue } = getFormValues();
+
+  if (selectedProducts.length === 0) {
+    addMessage(
+      "Please select at least one product before generating a routine.",
+      "ai",
+    );
+    return;
+  }
+
+  const message = chatMessageValue || "Plan a personalized routine for me.";
+  await handleUserInput(message);
+});
 
 chatForm.addEventListener("submit", async (event) => {
   event.preventDefault();
