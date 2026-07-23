@@ -7,6 +7,8 @@ const userInput = document.getElementById("userInput");
 const selectedProductsList = document.getElementById("selectedProductsList");
 const generateRoutineButton = document.getElementById("generateRoutine");
 
+const STORAGE_KEY = "lorealRoutinePreferences";
+
 let allProducts = [];
 let selectedProducts = [];
 
@@ -27,6 +29,63 @@ async function loadProducts() {
   const data = await response.json();
   allProducts = data.products;
   return allProducts;
+}
+
+function savePreferences() {
+  const preferences = {
+    category: categoryFilter.value,
+    selectedProductIds: selectedProducts.map((product) => product.id),
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+}
+
+function restorePreferences() {
+  const savedPreferences = localStorage.getItem(STORAGE_KEY);
+
+  if (!savedPreferences) {
+    return;
+  }
+
+  try {
+    const parsedPreferences = JSON.parse(savedPreferences);
+
+    if (parsedPreferences.category) {
+      categoryFilter.value = parsedPreferences.category;
+    }
+
+    if (Array.isArray(parsedPreferences.selectedProductIds)) {
+      selectedProducts = allProducts.filter((product) =>
+        parsedPreferences.selectedProductIds.includes(product.id),
+      );
+    }
+  } catch (error) {
+    console.warn("Could not restore saved routine preferences.", error);
+  }
+}
+
+function renderProductsForCurrentCategory() {
+  if (!categoryFilter.value) {
+    productsContainer.innerHTML = `
+      <div class="placeholder-message">
+        Select a category to view products
+      </div>
+    `;
+    return;
+  }
+
+  const filteredProducts = allProducts.filter(
+    (product) => product.category === categoryFilter.value,
+  );
+
+  displayProducts(filteredProducts);
+}
+
+async function initializeApp() {
+  await loadProducts();
+  restorePreferences();
+  renderSelectedProducts();
+  renderProductsForCurrentCategory();
 }
 
 function renderSelectedProducts() {
@@ -92,6 +151,7 @@ function toggleSelectedProduct(productId) {
   }
 
   renderSelectedProducts();
+  savePreferences();
 
   const currentProducts = allProducts.filter(
     (item) => item.category === categoryFilter.value,
@@ -125,15 +185,13 @@ productsContainer.addEventListener("keydown", (event) => {
 });
 
 /* Filter and display products when category changes */
-categoryFilter.addEventListener("change", async (e) => {
-  const products = await loadProducts();
-  const selectedCategory = e.target.value;
+categoryFilter.addEventListener("change", async () => {
+  if (allProducts.length === 0) {
+    await loadProducts();
+  }
 
-  const filteredProducts = products.filter(
-    (product) => product.category === selectedCategory,
-  );
-
-  displayProducts(filteredProducts);
+  renderProductsForCurrentCategory();
+  savePreferences();
 });
 
 function getFormValues() {
@@ -212,6 +270,8 @@ async function handleUserInput(userMessage) {
 
 chatWindow.innerHTML =
   '<div class="msg ai">👋 Hello! How can I help you today?</div>';
+
+initializeApp();
 
 generateRoutineButton.addEventListener("click", async () => {
   const { chatMessageValue } = getFormValues();
