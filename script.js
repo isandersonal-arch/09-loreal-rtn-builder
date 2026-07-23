@@ -218,7 +218,7 @@ function buildRoutinePrompt(userMessage) {
 }
 
 function addMessage(text, sender) {
-  const label = sender === "user" ? "You" : "AI";
+  const label = sender === "user" ? "Me" : "L'Oréal Advisor";
   const messageClass = sender === "user" ? "user" : "ai";
 
   chatWindow.innerHTML += `<div class="msg ${messageClass}">${label}: ${text}</div>`;

@@ -72,7 +72,7 @@ body {
   border: 2px solid #ff003b;
   border-radius: 8px;
   cursor: pointer;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
 }
 
@@ -87,6 +87,7 @@ body {
   border: 2px solid #ff003b;
   border-radius: 8px;
   padding: 26px;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .chatbox h2 {
@@ -306,6 +307,7 @@ body {
   margin: 40px 0;
   padding: 20px;
   border: 2px solid #ff003b;
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 8px;
 }
 
@@ -348,7 +350,7 @@ body {
 }
 
 .generate-btn:hover {
-  background: #666;
+  background: #e3a535;
 }
 
 .generate-btn i {
